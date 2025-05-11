@@ -12,7 +12,8 @@
     <!-- <string name="edit_task_menu">Edit Task</string> --> <!-- Not used as a menu item -->
 
     <string name="no_due_date">No due date</string>
-    <string name="priority_prefix">Priority: </string>
+    <string name="priority_prefix">Priority: </string> <!-- This is for priority text, not due date -->
+    <string name="due_date_prefix">Due: </string> <!-- Add this for due dates -->
     <string name="title_is_required">Title is required.</string>
     <string name="task_saved">Task saved.</string>
     <string name="task_deleted">Task deleted.</string>

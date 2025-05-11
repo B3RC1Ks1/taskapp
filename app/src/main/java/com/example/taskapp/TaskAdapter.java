@@ -12,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.taskapp.R;
-import com.example.taskapp.Task; // Correct import
-import com.example.taskapp.DateUtils; // Correct import
+// import com.example.taskapp.R; // R is automatically available
+// import com.example.taskapp.Task; // Correct import
+// import com.example.taskapp.DateUtils; // Correct import
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -44,14 +44,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.textViewTitle.setText(currentTask.getTitle());
 
         if (currentTask.getDueDate() != null) {
-            holder.textViewDueDate.setText(context.getString(R.string.priority_prefix) + DateUtils.formatDate(currentTask.getDueDate())); // "Due: " prefix
+            String dueDateText = context.getString(R.string.due_date_prefix) + DateUtils.formatDate(currentTask.getDueDate());
+            holder.textViewDueDate.setText(dueDateText);
             holder.textViewDueDate.setVisibility(View.VISIBLE);
         } else {
-            holder.textViewDueDate.setText(R.string.no_due_date);
-            holder.textViewDueDate.setVisibility(View.GONE);
+            holder.textViewDueDate.setText(R.string.no_due_date); // Or just set to "" and hide
+            holder.textViewDueDate.setVisibility(View.GONE); // More consistent to hide if no date
         }
 
-        holder.textViewPriority.setText(currentTask.getPriority());
+        holder.textViewPriority.setText(currentTask.getPriority()); // Display the priority string
         setPriorityIndicator(holder.priorityIndicator, currentTask.getPriority());
 
         holder.checkBoxCompleted.setOnCheckedChangeListener(null); // Avoid listener conflicts
@@ -79,19 +80,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     private void setPriorityIndicator(View indicator, String priority) {
-        int colorResId;
+        // Ensure the original shape drawable is set as the background
+        indicator.setBackgroundResource(R.drawable.priority_indicator_shape);
+        // Make sure indicator is visible if it might have been hidden
+        indicator.setVisibility(View.VISIBLE);
+
         if (priority == null) {
-            indicator.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            // Option: Remove tint to show default shape color (e.g., darker_gray from the XML)
+            indicator.getBackground().setTintList(null);
+            // Alternative: Set a specific 'no priority' color tint
+            // indicator.getBackground().setTint(ContextCompat.getColor(context, R.color.priority_none_or_default));
+            // Alternative: Hide the indicator
+            // indicator.setVisibility(View.GONE);
             return;
         }
-        switch (priority.toLowerCase()) {
+
+        int colorResId;
+        switch (priority.toLowerCase()) { // Use toLowerCase for case-insensitive matching
             case "high": colorResId = R.color.priority_high; break;
             case "medium": colorResId = R.color.priority_medium; break;
             case "low": colorResId = R.color.priority_low; break;
-            default: colorResId = android.R.color.transparent; break;
+            default:
+                // Unknown priority string, remove tint or set to a default
+                indicator.getBackground().setTintList(null);
+                // Or hide if unknown priority should not show an indicator
+                // indicator.setVisibility(View.GONE);
+                return;
         }
         indicator.getBackground().setTint(ContextCompat.getColor(context, colorResId));
     }
+
 
     @Override
     public int getItemCount() {
