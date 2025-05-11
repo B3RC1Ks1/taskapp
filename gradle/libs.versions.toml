@@ -1,0 +1,51 @@
+[versions]
+agp = "8.10.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.10.1"
+constraintlayout = "2.2.1"
+# Add versions for the missing libraries
+lifecycle = "2.9.0" # Example version from your comments in build.gradle.kts
+recyclerview = "1.4.0" # Example version from your comments in build.gradle.kts
+firebaseBom = "33.13.0" # Example version from your comments in build.gradle.kts
+# Add versions for specific Firebase modules if needed (often covered by BOM)
+# firestore = "..."
+# firebaseAuth = "..."
+
+
+[libraries]
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+# Add definitions for AndroidX Lifecycle and RecyclerView
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycle" } # Note: this is an annotationProcessor
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+
+
+# Add definitions for Firebase
+# It's common to just add the BOM and rely on it for versions
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+# Specific Firebase modules can then be added without specifying a version IF the BOM is used
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+# Add other plugins here if needed (e.g., com.google.gms.google-services)
+
+# Add bundles if you want to group libraries
+# [bundles]
+# firebase = [
+#    "firebase-firestore",
+#    "firebase-auth"
+# ]

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/item_task_margin"
+    android:layout_marginEnd="@dimen/item_task_margin"
+    android:layout_marginTop="@dimen/item_task_margin"
+    android:layout_marginBottom="@dimen/item_task_margin"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_task_padding"
+        android:background="@color/task_item_background"> <!-- Default background -->
+
+        <CheckBox
+            android:id="@+id/checkbox_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="Task Title"
+            app:layout_constraintStart_toEndOf="@id/checkbox_completed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_delete_task"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/text_view_due_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            tools:text="Due: Dec 25, 2023"
+            app:layout_constraintStart_toStartOf="@id/text_view_title"
+            app:layout_constraintTop_toBottomOf="@id/text_view_title"
+            app:layout_constraintEnd_toEndOf="@id/text_view_title"
+            android:layout_marginTop="4dp"/>
+
+        <View
+            android:id="@+id/priority_indicator"
+            android:layout_width="@dimen/priority_indicator_size"
+            android:layout_height="@dimen/priority_indicator_size"
+            android:background="@drawable/priority_indicator_shape"
+            app:layout_constraintStart_toStartOf="@id/text_view_due_date"
+            app:layout_constraintTop_toBottomOf="@id/text_view_due_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="6dp"
+            tools:backgroundTint="@color/priority_medium"/>
+
+        <TextView
+            android:id="@+id/text_view_priority"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            tools:text="Medium Priority"
+            app:layout_constraintStart_toEndOf="@id/priority_indicator"
+            app:layout_constraintTop_toTopOf="@id/priority_indicator"
+            app:layout_constraintBottom_toBottomOf="@id/priority_indicator"
+            app:layout_constraintEnd_toEndOf="@id/text_view_due_date"
+            android:layout_marginStart="4dp"/>
+
+        <ImageButton
+            android:id="@+id/button_delete_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete_task_menu"
+            app:tint="?android:attr/textColorSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
