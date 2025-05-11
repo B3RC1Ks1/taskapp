@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.AddEditTaskActivity"> <!-- tools:context should point to your AddEditTaskActivity in com.example.taskapp.ui -->
+    tools:context=".AddEditTaskActivity"> <!-- tools:context should point to your AddEditTaskActivity in com.example.taskapp.ui -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -98,6 +98,7 @@
             android:id="@+id/spinner_priority"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:layout_marginTop="8dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
