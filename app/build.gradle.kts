@@ -1,10 +1,13 @@
+// First plugins block - must be at the top for applying base plugins like 'com.android.application'
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services) // Apply the plugin here using its alias
 }
 
 android {
     namespace = "com.example.taskapp"
-    compileSdk = 35
+    // Keep your target, compile, min SDKs
+    compileSdk = 35 // Using 35 as specified, make sure it's available
 
     defaultConfig {
         applicationId = "com.example.taskapp"
@@ -26,41 +29,38 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11 // Keep your Java versions
         targetCompatibility = JavaVersion.VERSION_11
     }
+    // Note: If you use Kotlin, you'd add a kotlinOptions block here
 }
 
 dependencies {
     // Existing dependencies from your new project (likely aliased in libs.versions.toml)
     implementation(libs.appcompat)
     implementation(libs.material)
-    // implementation(libs.activity) // Often 'androidx.activity:activity-ktx' or similar, check your libs.versions.toml
-    // For Java, 'androidx.activity:activity:1.8.0' or similar is fine.
-    // If libs.activity points to a KTX version, it's okay.
+    implementation(libs.activity) // Ensure this points to the non-KTX version if using Java primarily
     implementation(libs.constraintlayout)
 
     // ViewModel & LiveData (Android Architecture Components)
-    // Make sure you have aliases for these in your libs.versions.toml
-    // If not, use direct strings like: "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
-    implementation(libs.androidx.lifecycle.viewmodel) // Example alias
-    implementation(libs.androidx.lifecycle.livedata)   // Example alias
-    // annotationProcessor(libs.androidx.lifecycle.compiler) // Example alias, if needed for specific annotations
+    implementation(libs.androidx.lifecycle.viewmodel) // Ensure this points to the non-KTX version
+    implementation(libs.androidx.lifecycle.livedata)   // Ensure this points to the non-KTX version
+    // annotationProcessor(libs.androidx.lifecycle.compiler) // If you use specific lifecycle annotations requiring it
 
     // RecyclerView
-    // Make sure you have an alias for this in your libs.versions.toml
-    // If not, use direct string like: "androidx.recyclerview:recyclerview:1.3.2"
-    implementation(libs.androidx.recyclerview) // Example alias
+    implementation(libs.androidx.recyclerview)
 
     // Firebase
-    // Make sure you have aliases for these in your libs.versions.toml
-    // If not, use direct strings like: platform("com.google.firebase:firebase-bom:32.7.4")
-    implementation(platform(libs.firebase.bom))    // Example alias for Firebase BOM
-    implementation(libs.firebase.firestore)        // Example alias for Firestore
-    // implementation(libs.firebase.auth)          // Example alias, if you add authentication later
+    // !!! IMPORTANT !!!
+    // Ensure you have downloaded the 'google-services.json' file from your Firebase project
+    // and placed it in the 'app' module directory (usually 'app/google-services.json')
+    // ---
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    // implementation(libs.firebase.auth)
 
-    // Testing - these look fine if they are correctly aliased
+    // Testing
     testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit) // Typically 'androidx.test.ext:junit'
-    androidTestImplementation(libs.espresso.core) // Typically 'androidx.test.espresso:espresso-core'
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }
