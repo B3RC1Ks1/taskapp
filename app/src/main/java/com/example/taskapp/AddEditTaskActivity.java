@@ -13,11 +13,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar; // Import Toolbar
 import androidx.lifecycle.ViewModelProvider;
 import com.example.taskapp.R;
-import com.example.taskapp.Task; // Correct import
-import com.example.taskapp.DateUtils; // Correct import
-import com.example.taskapp.TaskViewModel; // Correct import
+import com.example.taskapp.Task;
+import com.example.taskapp.DateUtils;
+import com.example.taskapp.TaskViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.Calendar;
@@ -26,6 +27,7 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
     public static final String EXTRA_TASK = "com.example.taskapp.ui.EXTRA_TASK";
 
+    // View variables remain the same
     private TextInputEditText editTextTitle;
     private TextInputEditText editTextDescription;
     private TextView textViewSelectedDueDate;
@@ -42,8 +44,21 @@ public class AddEditTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_task); // Assumes activity_add_edit_task.xml
+        // Set the layout with CoordinatorLayout
+        setContentView(R.layout.activity_add_edit_task);
 
+        // --- Setup the Toolbar ---
+        Toolbar toolbar = findViewById(R.id.toolbar_add_edit); // Use the new Toolbar ID
+        setSupportActionBar(toolbar);
+        // Enable the Up button (back arrow)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close); // Your close icon
+        }
+        // --- End Toolbar Setup ---
+
+
+        // Find other views (IDs remain the same)
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         textViewSelectedDueDate = findViewById(R.id.text_view_selected_due_date);
@@ -53,30 +68,31 @@ public class AddEditTaskActivity extends AppCompatActivity {
         buttonSaveTask = findViewById(R.id.button_save_task);
         textInputLayoutTitle = findViewById(R.id.text_input_title);
 
+        // ViewModel setup remains the same
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
+        // Spinner setup remains the same
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.priority_levels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPriority.setAdapter(adapter);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close); // Ensure ic_close.xml exists
-        }
-
+        // Intent handling and populating fields remain the same
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_TASK)) {
             currentTask = (Task) intent.getSerializableExtra(EXTRA_TASK);
+            // Set title AFTER setting the support action bar
             setTitle(R.string.edit_task);
             if (currentTask != null) {
                 populateFields(currentTask);
             }
         } else {
+            // Set title AFTER setting the support action bar
             setTitle(R.string.add_task);
             updateDueDateDisplay(null);
         }
 
+        // Button listeners remain the same
         buttonPickDate.setOnClickListener(v -> showDatePickerDialog());
         buttonClearDate.setOnClickListener(v -> {
             selectedDueDateTimestamp = null;
@@ -84,6 +100,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
         });
         buttonSaveTask.setOnClickListener(v -> saveTask());
     }
+
+    // populateFields, showDatePickerDialog, updateDueDateDisplay, saveTask methods remain the same
 
     private void populateFields(@NonNull Task task) {
         editTextTitle.setText(task.getTitle());
@@ -155,10 +173,16 @@ public class AddEditTaskActivity extends AppCompatActivity {
         finish();
     }
 
+
+    // onOptionsItemSelected handles the Up button click
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            // This handles the Up button press
+            finish(); // Or NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

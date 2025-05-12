@@ -1,5 +1,5 @@
 // MainActivity.java
-package com.example.taskapp; // Package is now the root
+package com.example.taskapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,14 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar; // Import Toolbar
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-// Corrected imports for the new structure
 import com.example.taskapp.Task;
-import com.example.taskapp.AddEditTaskActivity; // Activity is in 'ui' subpackage
-import com.example.taskapp.TaskAdapter;         // Adapter is in 'ui' subpackage
+import com.example.taskapp.AddEditTaskActivity;
+import com.example.taskapp.TaskAdapter;
 import com.example.taskapp.TaskViewModel;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,33 +28,37 @@ public class MainActivity extends AppCompatActivity {
     private TaskViewModel taskViewModel;
     private TaskAdapter adapter;
     private TextView emptyViewText;
+    // No need for a Toolbar variable if only used in onCreate
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Assumes activity_main.xml exists in res/layout
+        // Ensure the layout with CoordinatorLayout is set
+        setContentView(R.layout.activity_main);
 
-        setTitle("My Tasks");
+        // --- Setup the Toolbar ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // The title is set via app:title in the XML, so no need for setTitle() here
+        // --- End Toolbar Setup ---
 
         emptyViewText = findViewById(R.id.empty_view_text);
-
         FloatingActionButton fabAddTask = findViewById(R.id.fab_add_task);
-        fabAddTask.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-            startActivityForResult(intent, ADD_TASK_REQUEST);
-        });
 
+        // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.tasks_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true); // Optional performance improvement
 
-        adapter = new TaskAdapter(this); // TaskAdapter is in com.example.taskapp.ui
+        adapter = new TaskAdapter(this);
         recyclerView.setAdapter(adapter);
 
+        // Setup ViewModel and Observer
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasks().observe(this, tasks -> {
             if (tasks != null) {
                 adapter.setTasks(tasks);
+                // Toggle empty view visibility
                 if (tasks.isEmpty()) {
                     emptyViewText.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
@@ -63,11 +67,13 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.VISIBLE);
                 }
             } else {
+                // Handle potential null list from LiveData (e.g., error state)
                 emptyViewText.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }
         });
 
+        // Setup Adapter Click Listener
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task task) {
@@ -78,12 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTaskCheckedChanged(Task task, boolean isChecked) {
-                // Create a new task object or modify the existing one carefully
-                // to avoid issues if the original task object is shared.
-                // For simplicity, we update the existing task object directly here.
                 task.setCompleted(isChecked);
-                // task.setLastUpdated(new Date()); // Firestore @ServerTimestamp handles this
-                taskViewModel.update(task);
+                taskViewModel.update(task); // ViewModel updates Firestore
             }
 
             @Override
@@ -91,30 +93,38 @@ public class MainActivity extends AppCompatActivity {
                 showDeleteConfirmationDialog(task);
             }
         });
+
+        // Setup FAB Click Listener
+        fabAddTask.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+            startActivityForResult(intent, ADD_TASK_REQUEST);
+        });
     }
 
+    // --- Helper method for delete confirmation ---
     private void showDeleteConfirmationDialog(Task task) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.confirm_delete_title)
                 .setMessage(R.string.confirm_delete_message)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    taskViewModel.delete(task);
+                    taskViewModel.delete(task); // ViewModel deletes from Firestore
                     Toast.makeText(MainActivity.this, R.string.task_deleted, Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(R.string.no, null)
                 .show();
     }
 
+    // --- Handle result from AddEditTaskActivity ---
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == ADD_TASK_REQUEST) {
-                Toast.makeText(this, R.string.task_saved, Toast.LENGTH_SHORT).show();
-            } else if (requestCode == EDIT_TASK_REQUEST) {
+            // Show feedback message. LiveData handles the actual list update.
+            if (requestCode == ADD_TASK_REQUEST || requestCode == EDIT_TASK_REQUEST) {
                 Toast.makeText(this, R.string.task_saved, Toast.LENGTH_SHORT).show();
             }
         }
+        // Optional: Handle RESULT_CANCELED or other results if needed
     }
 }
