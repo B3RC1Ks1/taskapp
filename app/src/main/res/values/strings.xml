@@ -31,12 +31,16 @@
     <string name="kanban_inprogress">In Progress</string>
     <string name="kanban_finished">Finished</string>
 
+    <string name="start_task">Start Task</string>
+    <string name="finish_task">Finish Task</string>
+
     <string-array name="priority_levels">
         <item>Low</item>
         <item>Medium</item>
         <item>High</item>
     </string-array>
 
+    <!-- status_levels array can be removed if not used elsewhere, but keeping it for now if XML still refers to it -->
     <string-array name="status_levels">
         <item>Upcoming</item>
         <item>In Progress</item>

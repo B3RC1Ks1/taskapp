@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment; // Added import
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskInteractionListener {
 
-    public static final int ADD_TASK_REQUEST = 1; // Kept for reference, not used by new API directly
-    public static final int EDIT_TASK_REQUEST = 2; // Kept for reference
+    public static final int ADD_TASK_REQUEST = 1;
+    public static final int EDIT_TASK_REQUEST = 2;
 
     private TaskViewModel taskViewModel;
     private ViewPager2 viewPager;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {
                     tab.setText(tabTitles[position]);
-                    tab.setContentDescription(tabTitles[position]); // Set content description for accessibility
+                    tab.setContentDescription(tabTitles[position]);
                 }
         ).attach();
 
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         }
 
         if (position != -1) {
-            // ViewPager2 creates fragments with tags "f" + position
             Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + position);
             if (fragment instanceof TaskListFragment) {
                 ((TaskListFragment) fragment).updateTasks(tasks);
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                 .show();
     }
 
-    // onActivityResult is no longer needed due to ActivityResultLauncher
 
     @Override
     public void onTaskClickedInFragment(Task task) {
@@ -144,8 +142,10 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void onTaskCheckedChangedInFragment(Task task, boolean isChecked) {
         task.setCompleted(isChecked);
-        if (!isChecked && task.getStatus() == null) {
+        if (!isChecked && task.getStatus() == null) { // Task was in "Finished", now un-checked
             task.setStatus(Task.STATUS_UPCOMING);
+        } else if (isChecked) { // Task is being marked as completed
+            task.setStatus(null); // Explicitly clear status for completed tasks
         }
         taskViewModel.update(task);
     }
@@ -153,5 +153,18 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void onDeleteClickedInFragment(Task task) {
         showDeleteConfirmationDialog(task);
+    }
+
+    @Override
+    public void onStartTaskClickedInFragment(Task task) {
+        task.setStatus(Task.STATUS_IN_PROGRESS);
+        task.setCompleted(false); // Ensure it's not completed
+        taskViewModel.update(task);
+    }
+
+    @Override
+    public void onFinishTaskClickedInFragment(Task task) {
+        task.setCompleted(true); // This will also set status to null via Task.setCompleted
+        taskViewModel.update(task);
     }
 }

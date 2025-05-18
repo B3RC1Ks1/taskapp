@@ -34,7 +34,9 @@ public class Task implements Serializable {
         this.priority = priority;
         this.completed = completed;
         if (!completed) {
-            this.status = STATUS_UPCOMING; // Default status for new, non-completed tasks
+            this.status = STATUS_UPCOMING;
+        } else {
+            this.status = null;
         }
     }
 
@@ -47,7 +49,7 @@ public class Task implements Serializable {
         if (!completed) {
             this.status = status;
         } else {
-            this.status = null; // Status is not relevant for completed tasks in this context
+            this.status = null;
         }
     }
 
@@ -66,10 +68,12 @@ public class Task implements Serializable {
     public void setCompleted(boolean completed) {
         this.completed = completed;
         if (completed) {
-            this.status = null; // Clear status when task is completed
-        } else if (this.status == null) {
-            this.status = STATUS_UPCOMING; // Default to upcoming if un-completed and status was null
+            this.status = null;
+        } else if (this.status == null) { // If un-completing a task that was finished (status was null)
+            this.status = STATUS_UPCOMING;
         }
+        // If un-completing a task that was In Progress, its status should remain In Progress,
+        // this is handled by not changing status if it's already set.
     }
     public Date getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(Date lastUpdated) { this.lastUpdated = lastUpdated; }

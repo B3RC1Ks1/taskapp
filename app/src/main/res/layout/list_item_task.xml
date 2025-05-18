@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/item_task_padding"
-        android:background="@color/task_item_background"> <!-- Default background -->
+        android:background="@color/task_item_background">
 
         <CheckBox
             android:id="@+id/checkbox_completed"
@@ -25,6 +25,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:layout_marginEnd="8dp"/>
 
         <TextView
@@ -56,7 +58,6 @@
             android:background="@drawable/priority_indicator_shape"
             app:layout_constraintStart_toStartOf="@id/text_view_due_date"
             app:layout_constraintTop_toBottomOf="@id/text_view_due_date"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="6dp"
             tools:backgroundTint="@color/priority_medium"/>
 
@@ -72,10 +73,48 @@
             app:layout_constraintEnd_toEndOf="@id/text_view_due_date"
             android:layout_marginStart="4dp"/>
 
+        <LinearLayout
+            android:id="@+id/layout_task_actions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/text_view_title"
+            app:layout_constraintEnd_toEndOf="@id/text_view_title"
+            app:layout_constraintTop_toBottomOf="@id/priority_indicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="start">
+
+            <Button
+                android:id="@+id/button_start_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_task"
+                style="?attr/materialButtonOutlinedStyle"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:minHeight="48dp"
+                android:textSize="12sp"/>
+
+            <Button
+                android:id="@+id/button_finish_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/finish_task"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:minHeight="48dp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
         <ImageButton
             android:id="@+id/button_delete_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_task_menu"

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TaskListFragment extends Fragment {
 
-    public static final String ARG_TASK_STATUS_TYPE = "task_status_type"; // Changed to public
+    public static final String ARG_TASK_STATUS_TYPE = "task_status_type";
     public static final int TYPE_UPCOMING = 0;
     public static final int TYPE_IN_PROGRESS = 1;
     public static final int TYPE_FINISHED = 2;
@@ -25,11 +25,14 @@ public class TaskListFragment extends Fragment {
     private TaskAdapter taskAdapter;
     private TextView emptyView;
     private OnTaskInteractionListener listener;
+    private int currentTaskStatusType;
 
     public interface OnTaskInteractionListener {
         void onTaskClickedInFragment(Task task);
         void onTaskCheckedChangedInFragment(Task task, boolean isChecked);
         void onDeleteClickedInFragment(Task task);
+        void onStartTaskClickedInFragment(Task task);
+        void onFinishTaskClickedInFragment(Task task);
     }
 
     public static TaskListFragment newInstance(int taskStatusType) {
@@ -38,6 +41,14 @@ public class TaskListFragment extends Fragment {
         args.putInt(ARG_TASK_STATUS_TYPE, taskStatusType);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            currentTaskStatusType = getArguments().getInt(ARG_TASK_STATUS_TYPE);
+        }
     }
 
     @Override
@@ -59,7 +70,7 @@ public class TaskListFragment extends Fragment {
         emptyView = view.findViewById(R.id.empty_view_tasks_in_fragment);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        taskAdapter = new TaskAdapter(getContext());
+        taskAdapter = new TaskAdapter(getContext(), currentTaskStatusType);
         recyclerView.setAdapter(taskAdapter);
 
         taskAdapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
@@ -81,6 +92,20 @@ public class TaskListFragment extends Fragment {
             public void onDeleteClick(Task task) {
                 if (listener != null) {
                     listener.onDeleteClickedInFragment(task);
+                }
+            }
+
+            @Override
+            public void onStartTaskClick(Task task) {
+                if (listener != null) {
+                    listener.onStartTaskClickedInFragment(task);
+                }
+            }
+
+            @Override
+            public void onFinishTaskClick(Task task) {
+                if (listener != null) {
+                    listener.onFinishTaskClickedInFragment(task);
                 }
             }
         });

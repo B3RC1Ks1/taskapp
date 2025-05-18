@@ -69,10 +69,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
         priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPriority.setAdapter(priorityAdapter);
 
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this,
-                R.array.status_levels, android.R.layout.simple_spinner_item);
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStatus.setAdapter(statusAdapter);
+        spinnerStatus.setVisibility(View.GONE);
+        textViewStatusLabel.setVisibility(View.GONE);
 
 
         Intent intent = getIntent();
@@ -81,15 +79,10 @@ public class AddEditTaskActivity extends AppCompatActivity {
             setTitle(R.string.edit_task);
             if (currentTask != null) {
                 populateFields(currentTask);
-                if (currentTask.isCompleted()) {
-                    spinnerStatus.setVisibility(View.GONE);
-                    textViewStatusLabel.setVisibility(View.GONE);
-                }
             }
         } else {
             setTitle(R.string.add_task);
             updateDueDateDisplay(null);
-            spinnerStatus.setSelection(0); // Default to "Upcoming"
         }
 
         buttonPickDate.setOnClickListener(v -> showDatePickerDialog());
@@ -114,21 +107,6 @@ public class AddEditTaskActivity extends AppCompatActivity {
                     break;
                 }
             }
-        }
-
-        if (task.getStatus() != null && !task.isCompleted()) {
-            String[] statuses = getResources().getStringArray(R.array.status_levels);
-            for (int i = 0; i < statuses.length; i++) {
-                if (statuses[i].equalsIgnoreCase(task.getStatus())) {
-                    spinnerStatus.setSelection(i);
-                    break;
-                }
-            }
-        } else if (task.isCompleted()){
-            spinnerStatus.setVisibility(View.GONE);
-            textViewStatusLabel.setVisibility(View.GONE);
-        } else {
-            spinnerStatus.setSelection(0); // Default to "Upcoming"
         }
     }
 
@@ -164,7 +142,6 @@ public class AddEditTaskActivity extends AppCompatActivity {
         String title = editTextTitle.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
         String priority = spinnerPriority.getSelectedItem().toString();
-        String status = spinnerStatus.getSelectedItem().toString();
 
 
         if (TextUtils.isEmpty(title)) {
@@ -179,12 +156,9 @@ public class AddEditTaskActivity extends AppCompatActivity {
             currentTask.setDescription(description);
             currentTask.setDueDate(selectedDueDateTimestamp);
             currentTask.setPriority(priority);
-            if (!currentTask.isCompleted()) {
-                currentTask.setStatus(status);
-            }
             taskViewModel.update(currentTask);
         } else {
-            Task newTask = new Task(title, description, selectedDueDateTimestamp, priority, false, status);
+            Task newTask = new Task(title, description, selectedDueDateTimestamp, priority, false, Task.STATUS_UPCOMING);
             taskViewModel.insert(newTask);
         }
         setResult(RESULT_OK);
