@@ -4,9 +4,12 @@ package com.example.taskapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,6 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     private final String[] tabTitles = new String[]{"Upcoming", "In Progress", "Finished"};
 
     private ActivityResultLauncher<Intent> taskActivityLauncher;
+
+    private enum SortOrder {
+        DUE_DATE, PRIORITY, ALPHABETICALLY
+    }
+    private SortOrder currentSortOrder = SortOrder.DUE_DATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,24 +78,9 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasks().observe(this, tasks -> {
             if (tasks != null) {
-                List<Task> upcomingTasks = tasks.stream()
-                        .filter(task -> !task.isCompleted() && (task.getStatus() == null || Task.STATUS_UPCOMING.equals(task.getStatus())))
-                        .collect(Collectors.toList());
-                List<Task> inProgressTasks = tasks.stream()
-                        .filter(task -> !task.isCompleted() && Task.STATUS_IN_PROGRESS.equals(task.getStatus()))
-                        .collect(Collectors.toList());
-                List<Task> finishedTasks = tasks.stream()
-                        .filter(Task::isCompleted)
-                        .collect(Collectors.toList());
-
-                updateFragmentList(TaskListFragment.TYPE_UPCOMING, upcomingTasks);
-                updateFragmentList(TaskListFragment.TYPE_IN_PROGRESS, inProgressTasks);
-                updateFragmentList(TaskListFragment.TYPE_FINISHED, finishedTasks);
-
+                processAndDisplayTasks(new ArrayList<>(tasks));
             } else {
-                updateFragmentList(TaskListFragment.TYPE_UPCOMING, new ArrayList<>());
-                updateFragmentList(TaskListFragment.TYPE_IN_PROGRESS, new ArrayList<>());
-                updateFragmentList(TaskListFragment.TYPE_FINISHED, new ArrayList<>());
+                processAndDisplayTasks(new ArrayList<>());
             }
         });
 
@@ -95,6 +89,49 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             taskActivityLauncher.launch(intent);
         });
     }
+
+    private void processAndDisplayTasks(List<Task> tasks) {
+        sortTaskList(tasks);
+
+        List<Task> upcomingTasks = tasks.stream()
+                .filter(task -> !task.isCompleted() && (task.getStatus() == null || Task.STATUS_UPCOMING.equals(task.getStatus())))
+                .collect(Collectors.toList());
+        List<Task> inProgressTasks = tasks.stream()
+                .filter(task -> !task.isCompleted() && Task.STATUS_IN_PROGRESS.equals(task.getStatus()))
+                .collect(Collectors.toList());
+        List<Task> finishedTasks = tasks.stream()
+                .filter(Task::isCompleted)
+                .collect(Collectors.toList());
+
+        updateFragmentList(TaskListFragment.TYPE_UPCOMING, upcomingTasks);
+        updateFragmentList(TaskListFragment.TYPE_IN_PROGRESS, inProgressTasks);
+        updateFragmentList(TaskListFragment.TYPE_FINISHED, finishedTasks);
+    }
+
+    private void sortTaskList(List<Task> tasks) {
+        switch (currentSortOrder) {
+            case DUE_DATE:
+                tasks.sort(Comparator.comparing(Task::getDueDate, Comparator.nullsLast(Comparator.naturalOrder())));
+                break;
+            case PRIORITY:
+                tasks.sort(Comparator.comparingInt(task -> getPriorityOrder(task.getPriority())));
+                break;
+            case ALPHABETICALLY:
+                tasks.sort(Comparator.comparing(Task::getTitle, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
+                break;
+        }
+    }
+
+    private int getPriorityOrder(String priority) {
+        if (priority == null) return 3;
+        switch (priority.toLowerCase()) {
+            case "high": return 0;
+            case "medium": return 1;
+            case "low": return 2;
+            default: return 3;
+        }
+    }
+
 
     private void updateFragmentList(int fragmentType, List<Task> tasks) {
         int position = -1;
@@ -142,10 +179,10 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void onTaskCheckedChangedInFragment(Task task, boolean isChecked) {
         task.setCompleted(isChecked);
-        if (!isChecked && task.getStatus() == null) { // Task was in "Finished", now un-checked
+        if (!isChecked && task.getStatus() == null) {
             task.setStatus(Task.STATUS_UPCOMING);
-        } else if (isChecked) { // Task is being marked as completed
-            task.setStatus(null); // Explicitly clear status for completed tasks
+        } else if (isChecked) {
+            task.setStatus(null);
         }
         taskViewModel.update(task);
     }
@@ -158,13 +195,52 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void onStartTaskClickedInFragment(Task task) {
         task.setStatus(Task.STATUS_IN_PROGRESS);
-        task.setCompleted(false); // Ensure it's not completed
+        task.setCompleted(false);
         taskViewModel.update(task);
     }
 
     @Override
     public void onFinishTaskClickedInFragment(Task task) {
-        task.setCompleted(true); // This will also set status to null via Task.setCompleted
+        task.setCompleted(true);
         taskViewModel.update(task);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        boolean needsRefresh = false;
+
+        if (id == R.id.action_sort_by_due_date) {
+            if (currentSortOrder != SortOrder.DUE_DATE) {
+                currentSortOrder = SortOrder.DUE_DATE;
+                needsRefresh = true;
+            }
+        } else if (id == R.id.action_sort_by_priority) {
+            if (currentSortOrder != SortOrder.PRIORITY) {
+                currentSortOrder = SortOrder.PRIORITY;
+                needsRefresh = true;
+            }
+        } else if (id == R.id.action_sort_by_alphabetically) {
+            if (currentSortOrder != SortOrder.ALPHABETICALLY) {
+                currentSortOrder = SortOrder.ALPHABETICALLY;
+                needsRefresh = true;
+            }
+        }
+
+        if (needsRefresh) {
+            List<Task> currentTasks = taskViewModel.getAllTasks().getValue();
+            if (currentTasks != null) {
+                processAndDisplayTasks(new ArrayList<>(currentTasks));
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
