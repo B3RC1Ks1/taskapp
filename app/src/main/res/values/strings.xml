@@ -7,6 +7,7 @@
     <string name="task_description_hint">Description (Optional)</string>
     <string name="task_due_date_label">Due Date:</string>
     <string name="task_priority_label">Priority:</string>
+    <string name="task_status_label">Status:</string>
     <string name="save_task">Save Task</string>
     <string name="delete_task_menu">Delete Task</string>
     <!-- <string name="edit_task_menu">Edit Task</string> --> <!-- Not used as a menu item -->
@@ -24,10 +25,20 @@
     <string name="pick_date">Pick Date</string>
     <string name="clear_date">Clear Date</string>
     <string name="no_tasks_yet">No tasks yet. Tap the + button to add one!</string>
+    <string name="no_tasks_in_column">No tasks in this column.</string>
+
+    <string name="kanban_upcoming">Upcoming</string>
+    <string name="kanban_inprogress">In Progress</string>
+    <string name="kanban_finished">Finished</string>
 
     <string-array name="priority_levels">
         <item>Low</item>
         <item>Medium</item>
         <item>High</item>
+    </string-array>
+
+    <string-array name="status_levels">
+        <item>Upcoming</item>
+        <item>In Progress</item>
     </string-array>
 </resources>

@@ -1,130 +1,157 @@
 // MainActivity.java
 package com.example.taskapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar; // Import Toolbar
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment; // Added import
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.taskapp.Task;
-import com.example.taskapp.AddEditTaskActivity;
-import com.example.taskapp.TaskAdapter;
-import com.example.taskapp.TaskViewModel;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public static final int ADD_TASK_REQUEST = 1;
-    public static final int EDIT_TASK_REQUEST = 2;
+public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskInteractionListener {
+
+    public static final int ADD_TASK_REQUEST = 1; // Kept for reference, not used by new API directly
+    public static final int EDIT_TASK_REQUEST = 2; // Kept for reference
 
     private TaskViewModel taskViewModel;
-    private TaskAdapter adapter;
-    private TextView emptyViewText;
-    // No need for a Toolbar variable if only used in onCreate
+    private ViewPager2 viewPager;
+    private KanbanPagerAdapter pagerAdapter;
+    private TabLayout tabLayout;
+
+    private final String[] tabTitles = new String[]{"Upcoming", "In Progress", "Finished"};
+
+    private ActivityResultLauncher<Intent> taskActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Ensure the layout with CoordinatorLayout is set
         setContentView(R.layout.activity_main);
 
-        // --- Setup the Toolbar ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // The title is set via app:title in the XML, so no need for setTitle() here
-        // --- End Toolbar Setup ---
 
-        emptyViewText = findViewById(R.id.empty_view_text);
         FloatingActionButton fabAddTask = findViewById(R.id.fab_add_task);
+        viewPager = findViewById(R.id.view_pager);
+        tabLayout = findViewById(R.id.tab_layout);
 
-        // Setup RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.tasks_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true); // Optional performance improvement
+        pagerAdapter = new KanbanPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
 
-        adapter = new TaskAdapter(this);
-        recyclerView.setAdapter(adapter);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    tab.setText(tabTitles[position]);
+                    tab.setContentDescription(tabTitles[position]); // Set content description for accessibility
+                }
+        ).attach();
 
-        // Setup ViewModel and Observer
+        taskActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Toast.makeText(this, R.string.task_saved, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasks().observe(this, tasks -> {
             if (tasks != null) {
-                adapter.setTasks(tasks);
-                // Toggle empty view visibility
-                if (tasks.isEmpty()) {
-                    emptyViewText.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                } else {
-                    emptyViewText.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
+                List<Task> upcomingTasks = tasks.stream()
+                        .filter(task -> !task.isCompleted() && (task.getStatus() == null || Task.STATUS_UPCOMING.equals(task.getStatus())))
+                        .collect(Collectors.toList());
+                List<Task> inProgressTasks = tasks.stream()
+                        .filter(task -> !task.isCompleted() && Task.STATUS_IN_PROGRESS.equals(task.getStatus()))
+                        .collect(Collectors.toList());
+                List<Task> finishedTasks = tasks.stream()
+                        .filter(Task::isCompleted)
+                        .collect(Collectors.toList());
+
+                updateFragmentList(TaskListFragment.TYPE_UPCOMING, upcomingTasks);
+                updateFragmentList(TaskListFragment.TYPE_IN_PROGRESS, inProgressTasks);
+                updateFragmentList(TaskListFragment.TYPE_FINISHED, finishedTasks);
+
             } else {
-                // Handle potential null list from LiveData (e.g., error state)
-                emptyViewText.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
+                updateFragmentList(TaskListFragment.TYPE_UPCOMING, new ArrayList<>());
+                updateFragmentList(TaskListFragment.TYPE_IN_PROGRESS, new ArrayList<>());
+                updateFragmentList(TaskListFragment.TYPE_FINISHED, new ArrayList<>());
             }
         });
 
-        // Setup Adapter Click Listener
-        adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Task task) {
-                Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-                intent.putExtra(AddEditTaskActivity.EXTRA_TASK, task);
-                startActivityForResult(intent, EDIT_TASK_REQUEST);
-            }
-
-            @Override
-            public void onTaskCheckedChanged(Task task, boolean isChecked) {
-                task.setCompleted(isChecked);
-                taskViewModel.update(task); // ViewModel updates Firestore
-            }
-
-            @Override
-            public void onDeleteClick(Task task) {
-                showDeleteConfirmationDialog(task);
-            }
-        });
-
-        // Setup FAB Click Listener
         fabAddTask.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-            startActivityForResult(intent, ADD_TASK_REQUEST);
+            taskActivityLauncher.launch(intent);
         });
     }
 
-    // --- Helper method for delete confirmation ---
+    private void updateFragmentList(int fragmentType, List<Task> tasks) {
+        int position = -1;
+        switch (fragmentType) {
+            case TaskListFragment.TYPE_UPCOMING:
+                position = 0;
+                break;
+            case TaskListFragment.TYPE_IN_PROGRESS:
+                position = 1;
+                break;
+            case TaskListFragment.TYPE_FINISHED:
+                position = 2;
+                break;
+        }
+
+        if (position != -1) {
+            // ViewPager2 creates fragments with tags "f" + position
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + position);
+            if (fragment instanceof TaskListFragment) {
+                ((TaskListFragment) fragment).updateTasks(tasks);
+            }
+        }
+    }
+
+
     private void showDeleteConfirmationDialog(Task task) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.confirm_delete_title)
                 .setMessage(R.string.confirm_delete_message)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    taskViewModel.delete(task); // ViewModel deletes from Firestore
+                    taskViewModel.delete(task);
                     Toast.makeText(MainActivity.this, R.string.task_deleted, Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(R.string.no, null)
                 .show();
     }
 
-    // --- Handle result from AddEditTaskActivity ---
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    // onActivityResult is no longer needed due to ActivityResultLauncher
 
-        if (resultCode == RESULT_OK) {
-            // Show feedback message. LiveData handles the actual list update.
-            if (requestCode == ADD_TASK_REQUEST || requestCode == EDIT_TASK_REQUEST) {
-                Toast.makeText(this, R.string.task_saved, Toast.LENGTH_SHORT).show();
-            }
+    @Override
+    public void onTaskClickedInFragment(Task task) {
+        Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK, task);
+        taskActivityLauncher.launch(intent);
+    }
+
+    @Override
+    public void onTaskCheckedChangedInFragment(Task task, boolean isChecked) {
+        task.setCompleted(isChecked);
+        if (!isChecked && task.getStatus() == null) {
+            task.setStatus(Task.STATUS_UPCOMING);
         }
-        // Optional: Handle RESULT_CANCELED or other results if needed
+        taskViewModel.update(task);
+    }
+
+    @Override
+    public void onDeleteClickedInFragment(Task task) {
+        showDeleteConfirmationDialog(task);
     }
 }

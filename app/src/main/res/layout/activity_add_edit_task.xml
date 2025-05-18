@@ -88,7 +88,8 @@
                     android:text="@string/no_due_date"
                     android:padding="12dp"
                     android:background="?attr/editTextBackground"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:minHeight="48dp"/>
 
                 <Button
                     android:id="@+id/button_pick_date"
@@ -96,7 +97,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pick_date"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_marginStart="8dp"/>
+                    android:layout_marginStart="8dp"
+                    android:minHeight="48dp"/>
 
                 <Button
                     android:id="@+id/button_clear_date"
@@ -107,7 +109,8 @@
                     android:textColor="?attr/colorError"
                     app:strokeColor="?attr/colorError"
                     android:layout_marginStart="8dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:minHeight="48dp"/>
             </LinearLayout>
 
             <TextView
@@ -124,7 +127,27 @@
                 android:layout_marginTop="8dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:minHeight="48dp"
                 android:entries="@array/priority_levels"
+                style="@style/Widget.AppCompat.Spinner.Underlined"/>
+
+            <TextView
+                android:id="@+id/text_view_status_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/task_status_label"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+
+            <Spinner
+                android:id="@+id/spinner_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:minHeight="48dp"
+                android:entries="@array/status_levels"
                 style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             <Button
@@ -132,7 +155,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save_task"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginTop="24dp"
+                android:minHeight="48dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
