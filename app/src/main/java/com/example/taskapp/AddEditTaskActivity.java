@@ -1,4 +1,3 @@
-// AddEditTaskActivity.java
 package com.example.taskapp;
 
 import android.app.DatePickerDialog;
@@ -65,8 +64,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
         ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(this,
-                R.array.priority_levels, android.R.layout.simple_spinner_item);
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.priority_levels, R.layout.spinner_item_material);
+        priorityAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_material);
         spinnerPriority.setAdapter(priorityAdapter);
 
         spinnerStatus.setVisibility(View.GONE);

@@ -11,14 +11,16 @@
         android:id="@+id/app_bar_layout_add_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_add_edit"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIconTint="?attr/colorOnPrimary"
+            app:popupTheme="@style/ThemeOverlay.Material3.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -41,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/task_title_hint"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_title"
@@ -55,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/task_description_hint"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -72,13 +74,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_due_date_label"
                 android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
 
                 <TextView
                     android:id="@+id/text_view_selected_due_date"
@@ -87,11 +90,11 @@
                     android:layout_weight="1"
                     android:text="@string/no_due_date"
                     android:padding="12dp"
-                    android:background="?attr/editTextBackground"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:background="@drawable/date_textview_background"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:minHeight="48dp"/>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_pick_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,14 +103,14 @@
                     android:layout_marginStart="8dp"
                     android:minHeight="48dp"/>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_clear_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/clear_date"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:textColor="?attr/colorError"
                     app:strokeColor="?attr/colorError"
+                    android:textColor="?attr/colorError"
                     android:layout_marginStart="8dp"
                     android:visibility="gone"
                     android:minHeight="48dp"/>
@@ -118,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_priority_label"
                 android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
             <Spinner
                 android:id="@+id/spinner_priority"
@@ -128,8 +131,9 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:minHeight="48dp"
-                android:entries="@array/priority_levels"
-                style="@style/Widget.AppCompat.Spinner.Underlined"/>
+                android:background="@drawable/spinner_background_material"/>
+            <!-- android:entries="@array/priority_levels" REMOVED -->
+
 
             <TextView
                 android:id="@+id/text_view_status_label"
@@ -137,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_status_label"
                 android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:visibility="gone"/>
 
             <Spinner
@@ -148,18 +152,17 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:minHeight="48dp"
-                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:background="@drawable/spinner_background_material"
                 android:visibility="gone"/>
-            <!-- android:entries="@array/status_levels" attribute can be removed if status_levels array is removed -->
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_save_task"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save_task"
                 android:layout_marginTop="24dp"
-                android:minHeight="48dp"/>
+                android:minHeight="56dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

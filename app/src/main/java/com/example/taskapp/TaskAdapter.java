@@ -1,7 +1,7 @@
-// TaskAdapter.java
 package com.example.taskapp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,16 +86,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
+    private boolean isNightModeActive() {
+        int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
+
     private void updateTaskAppearance(TaskViewHolder holder, boolean isCompleted) {
         MaterialCardView cardView = (MaterialCardView) holder.itemView;
         if (isCompleted) {
             holder.textViewTitle.setPaintFlags(holder.textViewTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.task_item_completed_background));
-            holder.textViewTitle.setTextColor(ContextCompat.getColor(context, R.color.task_item_title_completed));
+            cardView.setCardBackgroundColor(ContextCompat.getColor(context,
+                    isNightModeActive() ? R.color.task_item_background_completed_dark : R.color.task_item_background_completed));
+            holder.textViewTitle.setTextColor(ContextCompat.getColor(context,
+                    isNightModeActive() ? R.color.task_item_title_completed_text_dark : R.color.task_item_title_completed_text));
         } else {
             holder.textViewTitle.setPaintFlags(holder.textViewTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.task_item_background));
-            holder.textViewTitle.setTextColor(ContextCompat.getColor(context, R.color.black));
+            cardView.setCardBackgroundColor(ContextCompat.getColor(context,
+                    isNightModeActive() ? R.color.task_item_background_default_dark : R.color.task_item_background_default));
+            holder.textViewTitle.setTextColor(ContextCompat.getColor(context,
+                    isNightModeActive() ? R.color.md_theme_dark_onSurface : R.color.md_theme_light_onSurface));
         }
     }
 

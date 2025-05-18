@@ -16,18 +16,22 @@
         android:theme="@style/Theme.Taskapp"
         tools:targetApi="31">
 
-        <!-- MainActivity with NoActionBar theme -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.Taskapp.NoActionBar">
+            android:theme="@style/Theme.Taskapp.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- AddEditTaskActivity with NoActionBar theme -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Taskapp.NoActionBar">
+        </activity>
+
         <activity
             android:name=".AddEditTaskActivity"
             android:parentActivityName=".MainActivity"

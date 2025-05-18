@@ -11,6 +11,7 @@ lifecycle = "2.9.0"    # Stable version for non-KTX
 recyclerview = "1.4.0" # Stable version
 firebaseBom = "33.13.0" # Stable version (check for latest)
 googleGmsServices = "4.4.2" # Version for the google-services plugin
+coreSplashscreen = "1.0.1" # Add this line
 
 
 [libraries]
@@ -29,6 +30,9 @@ androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-
 
 # RecyclerView
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+
+# Core Splashscreen - Add this line
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 
 
 # Firebase

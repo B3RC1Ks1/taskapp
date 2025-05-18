@@ -50,6 +50,9 @@ dependencies {
     // RecyclerView
     implementation(libs.androidx.recyclerview)
 
+    // Core Splashscreen - Add this line
+    implementation(libs.androidx.core.splashscreen)
+
     // Firebase
     // !!! IMPORTANT !!!
     // Ensure you have downloaded the 'google-services.json' file from your Firebase project

@@ -7,16 +7,15 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/item_task_margin"
     android:layout_marginEnd="@dimen/item_task_margin"
-    android:layout_marginTop="@dimen/item_task_margin"
-    android:layout_marginBottom="@dimen/item_task_margin"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp"
     app:cardElevation="2dp"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_task_padding"
-        android:background="@color/task_item_background">
+        android:padding="@dimen/item_task_padding">
 
         <CheckBox
             android:id="@+id/checkbox_completed"
@@ -33,7 +32,7 @@
             android:id="@+id/text_view_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             tools:text="Task Title"
             app:layout_constraintStart_toEndOf="@id/checkbox_completed"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +43,7 @@
             android:id="@+id/text_view_due_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             tools:text="Due: Dec 25, 2023"
             app:layout_constraintStart_toStartOf="@id/text_view_title"
             app:layout_constraintTop_toBottomOf="@id/text_view_title"
@@ -65,7 +64,7 @@
             android:id="@+id/text_view_priority"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             tools:text="Medium Priority"
             app:layout_constraintStart_toEndOf="@id/priority_indicator"
             app:layout_constraintTop_toTopOf="@id/priority_indicator"
@@ -85,7 +84,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="start">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_start_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,10 +92,15 @@
                 style="?attr/materialButtonOutlinedStyle"
                 android:visibility="gone"
                 tools:visibility="visible"
+                android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 android:textSize="12sp"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_finish_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,20 +109,23 @@
                 android:layout_marginStart="8dp"
                 android:visibility="gone"
                 tools:visibility="visible"
+                android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 android:textSize="12sp"/>
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/button_delete_task"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_task_menu"
-            app:tint="?android:attr/textColorSecondary"
+            app:tint="?attr/colorOnSurfaceVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
