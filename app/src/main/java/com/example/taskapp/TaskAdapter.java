@@ -102,9 +102,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         } else {
             holder.textViewTitle.setPaintFlags(holder.textViewTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             cardView.setCardBackgroundColor(ContextCompat.getColor(context,
-                    isNightModeActive() ? R.color.task_item_background_default_dark : R.color.task_item_background_default));
-            holder.textViewTitle.setTextColor(ContextCompat.getColor(context,
-                    isNightModeActive() ? R.color.md_theme_dark_onSurface : R.color.md_theme_light_onSurface));
+                    isNightModeActive() ? R.color.task_card_background_dark : R.color.task_card_background_light));
         }
     }
 

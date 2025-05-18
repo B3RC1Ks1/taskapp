@@ -16,10 +16,10 @@
     <color name="md_theme_light_errorContainer">#FFDAD6</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
     <color name="md_theme_light_onErrorContainer">#410002</color>
-    <color name="md_theme_light_background">#FDFCFF</color>
-    <color name="md_theme_light_onBackground">#1A1C1E</color>
-    <color name="md_theme_light_surface">#FDFCFF</color>
-    <color name="md_theme_light_onSurface">#1A1C1E</color>
+    <color name="md_theme_light_background_default">#FDFCFF</color> <!-- Renamed from md_theme_light_background -->
+    <color name="md_theme_light_onBackground_default">#1A1C1E</color> <!-- Renamed from md_theme_light_onBackground -->
+    <color name="md_theme_light_surface_default">#FDFCFF</color> <!-- Renamed from md_theme_light_surface -->
+    <color name="md_theme_light_onSurface_default">#1A1C1E</color> <!-- Renamed from md_theme_light_onSurface -->
     <color name="md_theme_light_surfaceVariant">#DFE3EB</color>
     <color name="md_theme_light_onSurfaceVariant">#42474E</color>
     <color name="md_theme_light_outline">#73777F</color>
@@ -47,10 +47,10 @@
     <color name="md_theme_dark_errorContainer">#93000A</color>
     <color name="md_theme_dark_onError">#690005</color>
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
-    <color name="md_theme_dark_background">#1A1C1E</color>
-    <color name="md_theme_dark_onBackground">#E2E2E6</color>
-    <color name="md_theme_dark_surface">#1A1C1E</color>
-    <color name="md_theme_dark_onSurface">#E2E2E6</color>
+    <color name="md_theme_dark_background_default">#1A1C1E</color> <!-- Renamed from md_theme_dark_background -->
+    <color name="md_theme_dark_onBackground_default">#E2E2E6</color> <!-- Renamed from md_theme_dark_onBackground -->
+    <color name="md_theme_dark_surface_default">#1A1C1E</color> <!-- Renamed from md_theme_dark_surface -->
+    <color name="md_theme_dark_onSurface_default">#E2E2E6</color> <!-- Renamed from md_theme_dark_onSurface -->
     <color name="md_theme_dark_surfaceVariant">#42474E</color>
     <color name="md_theme_dark_onSurfaceVariant">#C2C7CF</color>
     <color name="md_theme_dark_outline">#8C9199</color>
@@ -70,11 +70,21 @@
     <color name="priority_low">#4CAF50</color>
     <color name="priority_default_text">#757575</color>
 
-    <color name="task_item_background_default">@color/md_theme_light_surface</color>
+    <color name="app_overall_background_light">#EBF5FF</color>
+    <color name="app_overall_background_dark">#1A2238</color>
+    <color name="app_on_overall_background_light">#1A1C1E</color>
+    <color name="app_on_overall_background_dark">#E2E2E6</color>
+
+    <color name="task_card_background_light">#FFFFFF</color>
+    <color name="task_card_background_dark">#25304D</color>
+
     <color name="task_item_background_completed">@color/md_theme_light_surfaceVariant</color>
     <color name="task_item_title_completed_text">@color/md_theme_light_onSurfaceVariant</color>
 
-    <color name="task_item_background_default_dark">@color/md_theme_dark_surface</color>
     <color name="task_item_background_completed_dark">@color/md_theme_dark_surfaceVariant</color>
     <color name="task_item_title_completed_text_dark">@color/md_theme_dark_onSurfaceVariant</color>
+
+    <!-- New colors for TextInputLayout background -->
+    <color name="textfield_fill_background_light">#FFFFFF</color>
+    <color name="textfield_fill_background_dark">#2D3748</color> <!-- A distinct dark grey, lighter than page bg -->
 </resources>

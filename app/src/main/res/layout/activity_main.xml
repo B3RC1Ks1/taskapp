@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- This AppBarLayout will now use the colorful background from the theme -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
@@ -18,8 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="?attr/colorOnSurface"
+            app:titleTextAppearance="@style/App.Toolbar.Title"
             app:popupTheme="@style/ThemeOverlay.Material3.Light" />
+        <!-- Note: app:titleTextColor is effectively set by App.Toolbar.Title or defaults to colorOnSurface -->
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -31,7 +33,7 @@
             app:tabSelectedTextColor="?attr/colorPrimary"
             app:tabIndicatorColor="?attr/colorPrimary"
             app:tabRippleColor="?attr/colorControlHighlight"
-            android:contentDescription="@string/app_name"/>
+            android:contentDescription="@string/main_navigation_tabs"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,8 +50,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add"
-        app:tint="?attr/colorOnSecondaryContainer"
+        app:tint="?attr/colorOnPrimary"
         android:contentDescription="@string/add_task"
-        app:backgroundTint="?attr/colorSecondaryContainer"/>
+        app:backgroundTint="?attr/colorPrimary"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -43,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/task_title_hint"
+                app:boxBackgroundColor="?attr/textInputBoxBackgroundColor"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -57,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/task_description_hint"
+                app:boxBackgroundColor="?attr/textInputBoxBackgroundColor"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginTop="16dp">
 
@@ -74,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_due_date_label"
                 android:layout_marginTop="16dp"
+                android:textColor="?attr/colorOnBackground"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
             <LinearLayout
@@ -100,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pick_date"
                     style="?attr/materialButtonOutlinedStyle"
+                    app:cornerRadius="20dp"
                     android:layout_marginStart="8dp"
                     android:minHeight="48dp"/>
 
@@ -111,6 +115,7 @@
                     style="?attr/materialButtonOutlinedStyle"
                     app:strokeColor="?attr/colorError"
                     android:textColor="?attr/colorError"
+                    app:cornerRadius="20dp"
                     android:layout_marginStart="8dp"
                     android:visibility="gone"
                     android:minHeight="48dp"/>
@@ -121,6 +126,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_priority_label"
                 android:layout_marginTop="16dp"
+                android:textColor="?attr/colorOnBackground"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
             <Spinner
@@ -132,8 +138,6 @@
                 android:paddingBottom="12dp"
                 android:minHeight="48dp"
                 android:background="@drawable/spinner_background_material"/>
-            <!-- android:entries="@array/priority_levels" REMOVED -->
-
 
             <TextView
                 android:id="@+id/text_view_status_label"
@@ -141,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/task_status_label"
                 android:layout_marginTop="16dp"
+                android:textColor="?attr/colorOnBackground"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:visibility="gone"/>
 
@@ -162,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/save_task"
                 android:layout_marginTop="24dp"
+                app:cornerRadius="28dp"
                 android:minHeight="56dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

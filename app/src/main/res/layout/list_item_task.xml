@@ -9,8 +9,8 @@
     android:layout_marginEnd="@dimen/item_task_margin"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="4dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="8dp">
+    app:cardElevation="1dp"
+    app:cardCornerRadius="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textStyle="bold"
             tools:text="Task Title"
             app:layout_constraintStart_toEndOf="@id/checkbox_completed"
             app:layout_constraintTop_toTopOf="parent"
@@ -89,15 +90,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/start_task"
-                style="?attr/materialButtonOutlinedStyle"
+                app:cornerRadius="20dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:minWidth="48dp"
-                android:minHeight="48dp"
+                android:minHeight="40dp"
+                android:height="40dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:textSize="12sp"/>
 
             <com.google.android.material.button.MaterialButton
@@ -105,16 +109,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/finish_task"
-                style="?attr/materialButtonOutlinedStyle"
+                app:cornerRadius="20dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 android:layout_marginStart="8dp"
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:minWidth="48dp"
-                android:minHeight="48dp"
+                android:minHeight="40dp"
+                android:height="40dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:textSize="12sp"/>
         </LinearLayout>
 
